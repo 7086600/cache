@@ -1,3 +1,3 @@
-module github.com/7086600/cache
+module go.mod
 
 go 1.17
