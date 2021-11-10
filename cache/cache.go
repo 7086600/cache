@@ -2,10 +2,12 @@ package cache
 
 import (
 	"errors"
+	"sync"
 	"time"
 )
 
 type Cache struct {
+	mu    *sync.RWMutex
 	Items map[string]item
 }
 
@@ -16,9 +18,12 @@ type item struct {
 
 // Make new Cache
 func New() *Cache {
-	return &Cache{
+	cache := &Cache{
+		mu:    new(sync.RWMutex),
 		Items: make(map[string]item),
 	}
+	go cache.scanCache()
+	return cache
 }
 
 // new item of cache
@@ -31,15 +36,18 @@ func newItem(value interface{}, ttl time.Duration) item {
 
 // Add cache-value to Cache
 func (c *Cache) Set(key string, value interface{}, ttl time.Duration) {
+	c.mu.Lock()
 	c.Items[key] = newItem(value, ttl)
+	c.mu.Unlock()
 }
 
 // Get cache-value from Cache
 func (c Cache) Get(key string) (interface{}, error) {
-	c.searchingExpiredValue(key)
+	c.mu.RLock()
+	defer c.mu.RUnlock()
 	item, exists := c.Items[key]
 	if !exists {
-		return nil, errors.New("key is not exist")
+		return nil, errors.New("")
 	}
 	return item.value, nil
 }
@@ -50,12 +58,23 @@ func (c *Cache) Delete(key string) error {
 	return nil
 }
 
-func (c *Cache) searchingExpiredValue(key string) error {
+// Seacrhing expired value method
+func (c *Cache) searchingExpiredValue() error {
 	t0 := time.Now().Unix()
+	c.mu.Lock()
 	for key, item := range c.Items {
 		if t0 > item.ttl {
 			c.Delete(key)
 		}
 	}
+	c.mu.Unlock()
 	return nil
+}
+
+// Scanning cache for expired value
+func (c *Cache) scanCache() {
+	for {
+		c.searchingExpiredValue()
+	}
+
 }

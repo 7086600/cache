@@ -13,30 +13,25 @@ func main() {
 
 	cachestorage := cache.New()
 	fmt.Printf("Пустой кэш:%v\n", cachestorage.Items)
-
-	for i := 0; i < 1000; i++ {
-		cachestorage.Set(fmt.Sprintf("KEY%d", i), fmt.Sprintf("VALUE%d", i), time.Second*time.Duration(i+1))
-	}
-
 	fmt.Printf("Кол-во значений в КЭШ:%v\n", len(cachestorage.Items))
 
-	key, err := cachestorage.Get("KEY0")
+	cachestorage.Set("userID", 42, time.Second*1)
+	userId, err := cachestorage.Get("userID")
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(key)
+	fmt.Println(userId)
 
-	time.Sleep(time.Second * 2)
+	time.Sleep(time.Second * 3)
 
-	for i := 0; i < 1000; i++ {
-		key, err = cachestorage.Get(fmt.Sprintf("KEY%d", i))
-		if err != nil {
-			log.Fatal(err)
-		}
+	userId, err = cachestorage.Get("userId")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	for i := 0; i < 7000; i++ {
+		cachestorage.Set(fmt.Sprintf("KEY%d", i), fmt.Sprintf("VALUE%d", i), time.Second*time.Duration(i+1))
 	}
 	fmt.Printf("Кол-во значений в КЭШ:%v\n", len(cachestorage.Items))
 
-	// fmt.Println(key)
-
-	// fmt.Printf("%v\n", cachestorage)
 }
