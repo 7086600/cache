@@ -1,9 +1,10 @@
 # cache
+version 1.0
 build in-memory cache in Go
 
 # Install
 
-go get -u github.com/7086600/cache
+go get -u https://github.com/7086600/cache/tree/cache_v1
 
 # Example
 
@@ -13,7 +14,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/7086600/cache"
+	"https://github.com/7086600/cache/tree/cache_v1"
 )
 
 func main() {

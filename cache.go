@@ -1,6 +1,6 @@
 package cache
 
-// PACKAGE CACHE
+// Cache struct
 type Cache struct {
 	items map[string]interface{}
 }
