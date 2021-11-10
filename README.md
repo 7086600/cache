@@ -1,5 +1,5 @@
 # cache
-build in-memory cache in Go
+build in-memory cache in Go with ttl value
 
 # Install
 
