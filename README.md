@@ -12,6 +12,8 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"time"
 
 	"github.com/7086600/cache"
 )
@@ -21,21 +23,26 @@ func main() {
 	cache := cache.New()
 
 	// Set value to cache
-	cache.Set("Key", []string{"Veni", "Vidi", "Vici"})
-	// Set value to cache with for:
-	for i := 0; i < 10; i++ {
-		cache.Set((fmt.Sprintf("Key%d", i)), (fmt.Sprintf("Value%d", i)))
+	cache.Set("Key", []string{"Veni", "Vidi", "Vici"}, time.Second*5)
+
+	// Get value from cache and check errors
+	key, err := cache.Get("Key")
+	fmt.Println(len(cache.Items))
+	if err != nil {
+		log.Fatal(err)
 	}
+	fmt.Println(key)
 
-	// Get info about value of cache
-	key1 := cache.Get("Key1")
-	fmt.Println(key1)
+	// Pause
+	time.Sleep(time.Second * 6)
 
-	// Delete value of cachу
-	cache.Delete("Key8")
-	key8 := cache.Get("Key8")
+	key, err = cache.Get("Key")
 
-	fmt.Println(key8)
+	key, _ = cache.Get("Key")
+	fmt.Println(len(cache.Items))
+	if err != nil {
+		log.Fatal(err)
+	}
 
 }
 ```
