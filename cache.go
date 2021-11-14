@@ -72,7 +72,8 @@ func (c *Cache) searchingExpiredValue() error {
 
 // Scanning cache for expired value
 func (c *Cache) scanCache() {
-	for {
+	ticker := time.NewTicker(time.Second)
+	for range ticker.C {
 		c.searchingExpiredValue()
 	}
 
