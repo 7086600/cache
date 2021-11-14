@@ -60,10 +60,9 @@ func (c *Cache) Delete(key string) error {
 
 // Seacrhing expired value method
 func (c *Cache) searchingExpiredValue() error {
-	t0 := time.Now().Unix()
 	c.mu.Lock()
 	for key, item := range c.Items {
-		if t0 > item.ttl {
+		if time.Now().Unix() > item.ttl {
 			c.Delete(key)
 		}
 	}
